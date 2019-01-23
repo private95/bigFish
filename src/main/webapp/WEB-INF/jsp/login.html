@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="GBK">
+    <title></title>
+    <script type="text/javascript">
+
+        function check_uname(){
+            var tip= document.getElementById("tip");
+            var login = document.getElementById("login");
+            var uname = document.getElementById("username").value;
+            var reg=/^[a-zA-Z]+\w{4,15}$/;
+            if(reg.test(uname)){
+                login.className="box right";
+                tip.style.display="none";
+                return true;
+            }else{
+
+                login.className="box error";
+                tip.style.display="block";
+                tip.className="login_tip error";
+                return false;
+            }
+        }
+        function check_pass(){
+            var reg=/^.{6,20}$/;
+            var tip= document.getElementById("tip_pass");
+            var login = document.getElementById("login_pass");
+            var pass = document.getElementById("password").value;
+            if(reg.test(pass)){
+                login.className="box right";
+                tip.style.display="none";
+                return true;
+            }else{
+
+                login.className="box error";
+                tip.style.display="block";
+                tip.className="login_tip error";
+                return false;
+            }
+        }
+
+        function checkAll(){
+            if(check_uname()&&check_pass()){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <style type="text/css">
+        .tran{transition: all 0.5s;}
+        *{font-family: "微软雅黑";font-size: 12px;}
+        .box{width: 250px;height: 30px;outline: 1px solid #ccc;padding-left: 10px;position: relative;margin-bottom: 35px;}
+        .box:hover{outline: 1px solid dodgerblue;}
+        .box input{outline: none;width: 170px;border: none;margin-top: 6px;padding-left:10px ;color: dimgray;}
+        .box.error{outline: 1px solid red;}
+        .box.right i{background: url(/static/img/right.png) no-repeat;width:20px;height:20px;position: absolute;right: 10px;top: 5px;}
+        .login_tip{margin-top: 10px;padding-left: 0px;display: none;}
+        .login_tip.error i{background:url(/static/img/error.png) no-repeat;width:20px;height:20px;position: absolute;}
+        .login_tip.error span{color: red;padding-left: 25px;margin-top:3px;display: inline-block;}
+
+        .btn {width: 260px;height: 30px;}
+        .btn input{width: 100%;height: 100%;display: inline-block;border: none;outline: none;background-color: dodgerblue;color: white;font-size:14px;}
+        .btn input:hover{background-color: #6495ED;box-shadow:0px 0px  2px 2px #1E90FF;cursor:pointer;}
+         #tip_message {color: #fffdef;font-size:15px;line-height: 40px;visibility:hidden;opacity: 0;width: 150px;height: 40px;position: relative; top: 70px;z-index: 9999;background-color: #0099CC;border-radius: 3px;}
+    </style>
+</head>
+<body>
+
+<center>
+
+    <h1 style="font-size: 24px;">星哥在,世界充满爱</h1>
+    <h2 style="font-size: 18px;color: #2C8DFB">[星哥权限管理]</h2>
+
+    <form id="loginForm" action="" method="post" >
+        <div id="tip_message" class="tran" >登录成功</div>
+        <div id="login" class="box" ><lable for="uname">账 号</lable><input name="username" id="username" onfocus="" onblur="check_uname()" type="text" placeholder="输入用户名" /><i></i>
+            <div id="tip" class="login_tip"><i></i><span>用户名格式6-10位之间的英文字符,不能</span></div>
+        </div>
+        <div id="login_pass" class="box" ><lable>密 码</lable><input name="password" id="password" onfocus="" onblur="check_pass()" type="password" placeholder="输入密码" /><i></i>
+            <div id="tip_pass" class="login_tip"><i></i><span>密码格式不正确,至少在6位以上字符</span></div>
+        </div>
+        <div id="go" class="btn" ><input id="btn_login" onfocus="" onblur="" type="button" value="登录"/></div>
+   </form>
+</center>
+
+<script>
+
+    function jump(count) {
+        window.setTimeout(function(){
+            count--;
+            if(count > 0) {
+                $('#num').attr('innerHTML', count);
+                jump(count);
+            } else {
+                location.href="/home";
+            }
+        }, 1000);
+    }
+
+
+    $(function () {
+
+
+
+        ///bigfish/v1/login
+        $("#go").click(function () {
+
+            var name =$("#username").val();
+            var pass =$("#password").val();
+
+            if(!checkAll()){
+                console.log("验证失败");
+                return;
+            }else{
+                $.ajax({
+                    url:'/bigfish/v1/login',
+                    type:'POST',
+                    dataType:'json',
+                    data:{
+                        username:name,
+                        password:pass
+                    },
+                    success:function (data) {
+                        if(data.state==200){
+                            $("#btn_login").val("登陆中...");
+                            $("#tip_message").text(data.data+" ，跳转中...");
+                            $("#tip_message").addClass("tran");
+                            $("#tip_message").css({"opacity":"1","visibility":"visible","background-color": "#0099CC"})
+                            setTimeout(function(){$("#tip_message").css({"opacity":"0","visibility":"hidden"})}, 2000);
+                            jump(3);
+                        }else {
+                            $("#tip_message").text(data.data);
+                            $("#tip_message").addClass("tran");
+                            $("#tip_message").css({"opacity":"1","visibility":"visible","background-color": "#ab1e1e"})
+                            var timer1= setTimeout(function(){$("#tip_message").css({"opacity":"0","visibility":"hidden"})}, 2000);
+                            $("#password").val("");
+                        }
+                    },
+                    error:function () {
+                        alert("报错了");
+                    }
+                });
+            }
+
+
+
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

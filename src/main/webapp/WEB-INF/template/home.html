@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<br />数据(<span th:text="|状态:${state==null?0:state}|" th:style="${state==null?'color:red':'color:green'}"></span>)：
+    <br /><span th:text="|姓名:${student.name}|"></span><br />
+    <br /><span th:text=" ${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} "></span><br />
+    <br />数据列表：<br />
+    <table border="1">
+        <tr>
+            <th>姓名</th>
+            <th>年龄</th>
+            <th>数据</th>
+        </tr>
+        <tr>
+            <td th:text="${student.name}"></td>
+            <td th:text="${student.age}"></td>
+            <td th:text="${student.score}"></td>
+        </tr>
+    </table>
+
+<a th:href="@{/bigfish/v1/init(state=${student.age})}">点击</a>
+<a th:href="@{/bigfish/v1/click}">来啊</a>
+</body>
+</html>

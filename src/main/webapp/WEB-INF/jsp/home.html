@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="GBK">
+    <title>Title</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+    </script>
+</head>
+<body>
+你好 jsp home
+
+<br>
+
+<span shiro:hasRole="admin" >
+      <span>欢迎您：<span> admin </span></span>
+</span>
+
+
+<a href="/bigfish/v1/exportExcel">导出</a>
+<a href="/bigfish/v1/getJson" >测试权限</a>
+
+<div id="tip"></div>
+
+
+<script type="application/javascript">
+
+    function export_excel(){
+        /*$.get("/bigfish/v1/exportExcel2",{},function(data){
+            if(data.state == 200){
+
+                $("#tip").html("<font style='color:green;'>"+data.data+",在桌面查看"+"</font>");
+
+            }else{
+                $("#tip").text(data.data+",请重试！");
+            }
+        },"json");*/
+        wondow.location = "/bigfish/v1/exportExcel2";
+
+    }
+
+
+</script>
+
+
+<!--<br />数据(<span th:text="|状态:${state==null?0:state}|" th:style="${state==null?'color:red':'color:green'}"></span>)：
+    <br /><span th:text="|姓名:${student.name}|"></span><br />
+    <br /><span th:text=" ${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} "></span><br />
+    <br />数据列表：<br />
+    <table border="1">
+        <tr>
+            <th>姓名</th>
+            <th>年龄</th>
+            <th>数据</th>
+        </tr>
+        <tr>
+            <td th:text="${student.name}"></td>
+            <td th:text="${student.age}"></td>
+            <td th:text="${student.score}"></td>
+        </tr>
+    </table>
+
+<a th:href="@{/bigfish/v1/init(state=${student.age})}">点击</a>
+<a th:href="@{/bigfish/v1/click}">来啊</a>-->
+</body>
+</html>
